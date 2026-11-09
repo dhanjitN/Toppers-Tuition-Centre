@@ -2,3 +2,32 @@ node_modules/
 dist/
 .vite/
 *.local
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Editor and operating system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs, test output, and caches
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+.cache/
+
+# Android/Gradle local and generated files
+.gradle/
+local.properties
+android/capacitor-cordova-android-plugins/
+android/.gradle/
+android/local.properties
+android/build/
+android/app/build/
