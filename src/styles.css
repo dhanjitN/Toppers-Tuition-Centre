@@ -231,6 +231,35 @@ h1 { margin-bottom: 8px; font-size: 32px; line-height: 1.15; letter-spacing: 0; 
 .all-grades.rank-5 { border-color: #e9cd91; background: #fbf0d7; color: #594724; }
 @keyframes leader-orbit { to { transform: rotate(360deg); } }
 
+.all-grades.rank-1::before, .all-grades.rank-1::after,
+.all-grades.rank-2::before, .all-grades.rank-2::after,
+.all-grades.rank-3::before, .all-grades.rank-3::after { display: none; }
+.leader-card.all-grades.rank-1 { min-height: 100px; border: 2px solid #ef8f4b; background: #39221d; color: #fff3e6; box-shadow: 0 8px 20px rgba(116, 49, 25, .16); }
+.leader-card.all-grades.rank-2 { border: 2px solid #39b7d0; background: #d9f3f7; color: #173c4b; }
+.leader-card.all-grades.rank-3 { border: 2px solid #72b34e; background: #e2efdc; color: #294530; }
+.leader-card.all-grades.rank-4 { border-color: #9c978f; background: #e9e6df; color: #383b37; }
+.leader-card.all-grades.rank-5 { border-color: #d9b66d; background: #f5ebd4; color: #4a3b22; }
+.leader-art { position: absolute; z-index: 0; top: 0; right: 0; bottom: 0; width: 43%; background-repeat: no-repeat; background-position: center right; background-size: cover; opacity: .9; pointer-events: none; mask-image: linear-gradient(90deg, transparent 0%, #000 45%); }
+.leader-art-fire { width: 55%; background-image: url('/rank-fire.svg'); background-position: center right; background-size: cover; mask-image: linear-gradient(90deg, transparent 0%, #000 20%); animation: fire-glow 2.4s ease-in-out infinite; }
+.leader-art-water { width: 68%; background-image: url('/rank-water.svg'); background-position: 0 50%; background-size: 200% 100%; mask-image: linear-gradient(90deg, transparent 0%, #000 8%); animation: water-flow 8s linear infinite; }
+.leader-art-forest { width: 46%; background-image: url('/rank-forest.svg'); mask-image: linear-gradient(90deg, transparent 0%, #000 25%); transform-origin: 96% 100%; animation: wind-sway 4.8s ease-in-out infinite; }
+.leader-art-stone { background-image: url('/rank-stone.svg'); opacity: .72; }
+.leader-art-sunrise { background-image: url('/rank-sunrise.svg'); opacity: .72; }
+.leader-card.all-grades.rank-1 .leader-rank { color: #ffc078; font-family: 'Archivo Black', sans-serif; font-size: 25px; }
+.leader-card.all-grades.rank-1 .leader-person strong { font-family: 'Space Grotesk', sans-serif; font-size: 16px; }
+.leader-card.all-grades.rank-1 .leader-points { color: #ffd18a; font-family: 'Archivo Black', sans-serif; font-size: 17px; }
+.leader-card.all-grades.rank-2 .leader-rank, .leader-card.all-grades.rank-2 .leader-person strong { font-family: 'Playfair Display', serif; }
+.leader-card.all-grades.rank-2 .leader-rank { color: #347e91; font-size: 23px; }
+.leader-card.all-grades.rank-2 .leader-points { color: #27657a; font-family: 'Playfair Display', serif; font-size: 16px; }
+.leader-card.all-grades.rank-3 .leader-rank { color: #4f7f45; font-family: 'Space Grotesk', sans-serif; font-size: 21px; font-weight: 700; }
+.leader-card.all-grades.rank-3 .leader-person strong { font-family: 'Manrope', sans-serif; font-weight: 800; }
+.leader-card.all-grades.rank-3 .leader-points { color: #426d38; font-family: 'Space Grotesk', sans-serif; font-size: 15px; }
+.leader-card.all-grades.rank-4 .leader-rank { color: #6f6a63; font-family: 'Playfair Display', serif; font-style: italic; }
+.leader-card.all-grades.rank-5 .leader-rank { color: #9b742f; font-family: 'Archivo Black', sans-serif; font-size: 16px; }
+@keyframes fire-glow { 0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 104, 35, .5)) brightness(1.04); } 50% { filter: drop-shadow(0 0 16px rgba(255, 150, 61, .9)) brightness(1.22); } }
+@keyframes water-flow { to { background-position: 100% 50%; } }
+@keyframes wind-sway { 0%, 100% { transform: rotate(-1deg); } 50% { transform: rotate(2.2deg); } }
+
 .main-content { padding-top: 17px; }
 .month-calendar { padding: 11px 14px; }
 .calendar-heading { gap: 8px; margin-bottom: 8px; }
@@ -262,6 +291,10 @@ h1 { margin-bottom: 8px; font-size: 32px; line-height: 1.15; letter-spacing: 0; 
   .all-grades.rank-1 .leader-rank { font-size: 21px; }
   .all-grades.rank-1 .leader-person strong { font-size: 13px; }
   .all-grades.rank-1 .leader-points { font-size: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leader-art-fire, .leader-art-water, .leader-art-forest { animation: none; }
 }
 
 .schedule-filters { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px; margin-bottom: 11px; }

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="160" viewBox="0 0 720 160" fill="none">
+  <defs>
+    <pattern id="ocean" width="360" height="160" patternUnits="userSpaceOnUse">
+      <path d="M0 54c30-30 60-30 90 0s60 30 90 0 60-30 90 0 60 30 90 0v106H0V54Z" fill="#176E8A" fill-opacity=".96"/>
+      <path d="M0 86c30-26 60-26 90 0s60 26 90 0 60-26 90 0 60 26 90 0v74H0V86Z" fill="#219EB6"/>
+      <path d="M0 119c30-19 60-19 90 0s60 19 90 0 60-19 90 0 60 19 90 0v41H0v-41Z" fill="#5CC6CC"/>
+      <path d="M-30 33c30-18 60-18 90 0s60 18 90 0 60-18 90 0 60 18 90 0 60-18 90 0" stroke="#75D8DF" stroke-linecap="round" stroke-opacity=".82" stroke-width="7"/>
+      <path d="M-30 48c30-12 60-12 90 0s60 12 90 0 60-12 90 0 60 12 90 0 60-12 90 0" stroke="#E7FFFF" stroke-linecap="round" stroke-opacity=".95" stroke-width="3"/>
+      <path d="M-30 57c30-30 60-30 90 0s60 30 90 0 60-30 90 0 60 30 90 0 60-30 90 0" stroke="#C6F8F5" stroke-linecap="round" stroke-opacity=".95" stroke-width="4"/>
+      <path d="M-30 88c30-26 60-26 90 0s60 26 90 0 60-26 90 0 60 26 90 0 60-26 90 0" stroke="#D9FFFF" stroke-linecap="round" stroke-opacity=".8" stroke-width="3"/>
+      <path d="M15 105c17-10 34-10 51 0M143 131c17-9 33-9 50 0M258 104c18-10 36-10 54 0M42 148c15-6 30-6 45 0M220 149c15-6 30-6 45 0" stroke="#F2FFFF" stroke-linecap="round" stroke-opacity=".8" stroke-width="3"/>
+    </pattern>
+  </defs>
+  <path fill="url(#ocean)" d="M0 0h720v160H0z"/>
+</svg>

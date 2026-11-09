@@ -21,6 +21,7 @@ const students = [
 ]
 
 const grades = [...new Set(students.map((student) => student.grade))].sort((a, b) => a - b)
+const rankArtwork = ['fire', 'water', 'forest', 'stone', 'sunrise']
 
 export default function LeaderboardPage({ selectedGrade, onGradeChange }) {
   const rankedStudents = students
@@ -55,6 +56,9 @@ export default function LeaderboardPage({ selectedGrade, onGradeChange }) {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.22, delay: index * 0.035 }}
             >
+              {selectedGrade === 'all' && (
+                <span className={`leader-art leader-art-${rankArtwork[index]}`} aria-hidden="true" />
+              )}
               <span className="leader-rank">{String(index + 1).padStart(2, '0')}</span>
               <span className="leader-person">
                 <strong>{student.name}</strong>
