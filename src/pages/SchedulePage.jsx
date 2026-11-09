@@ -104,7 +104,10 @@ export default function SchedulePage({ schedule }) {
         {classList.length > 0 ? (
           <div className="class-list">
             {classList.map((session) => (
-              <article className="class-card" key={`${session.time}-${session.class}`}>
+              <article
+                className={`class-card${session.tone === 'test' ? ' test-session' : ''}`}
+                key={`${session.date}-${session.time}-${session.grade}-${session.class}`}
+              >
                 <div className={`class-accent ${session.tone}`} />
                 <div className="class-card-body">
                   <div className="class-session-heading">

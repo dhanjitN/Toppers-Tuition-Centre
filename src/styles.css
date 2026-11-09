@@ -142,6 +142,12 @@ h1 { margin-bottom: 8px; font-size: 32px; line-height: 1.15; letter-spacing: 0; 
 .class-accent.chemistry { background: #e2a38d; }
 .class-accent.biology { background: #9baed4; }
 .class-accent.workshop { background: #d4ae63; }
+.class-card.test-session { border-color: #efb4b4; background: #fff7f6; }
+.class-accent.test { background: #d94f52; }
+.class-card.test-session .class-card-body { font-family: Georgia, 'Times New Roman', serif; }
+.class-card.test-session .class-time { color: #a63b40; }
+.class-card.test-session h3 { color: #8d292e; font-family: Georgia, 'Times New Roman', serif; font-weight: 700; }
+.class-card.test-session .class-topic { color: #9f5558; font-family: Georgia, 'Times New Roman', serif; font-style: italic; }
 .class-card-body { min-width: 0; padding: 14px 14px 12px; }
 .class-time { display: flex; align-items: center; gap: 6px; margin-bottom: 9px; color: #687a6d; font-size: 10px; font-weight: 700; }
 .class-time svg { font-size: 13px; }
