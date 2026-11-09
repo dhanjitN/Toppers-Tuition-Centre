@@ -33,7 +33,7 @@ export default function App() {
   useEffect(() => {
     const controller = new AbortController()
     const dataBaseUrl = (
-      import.meta.env.VITE_DATA_BASE_URL || 'https://tuition-data.dhanjitxnath.workers.dev'
+      import.meta.env.VITE_DATA_BASE_URL || 'https://toppers-tuition-centre.dhanjitxnath.workers.dev/server'
     ).replace(/\/+$/, '')
 
     async function loadCentreData() {
