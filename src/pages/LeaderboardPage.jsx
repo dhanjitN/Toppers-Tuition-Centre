@@ -23,7 +23,7 @@ const students = [
 const grades = [...new Set(students.map((student) => student.grade))].sort((a, b) => a - b)
 const rankArtwork = ['fire', 'water', 'forest', 'stone', 'sunrise']
 
-export default function LeaderboardPage({ selectedGrade, onGradeChange }) {
+export default function LeaderboardPage({ selectedGrade, onGradeChange, students }) {
   const rankedStudents = students
     .filter((student) => selectedGrade === 'all' || student.grade === Number(selectedGrade))
     .sort((a, b) => b.points - a.points)

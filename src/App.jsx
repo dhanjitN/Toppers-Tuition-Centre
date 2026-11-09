@@ -14,6 +14,8 @@ export default function App() {
   const [activePage, setActivePage] = useState('leaderboard')
   const [selectedGrade, setSelectedGrade] = useState('all')
   const [showLoadingScreen, setShowLoadingScreen] = useState(true)
+  const [centreData, setCentreData] = useState(null)
+  const [dataError, setDataError] = useState('')
   const [theme, setTheme] = useState(() => {
     try {
       return localStorage.getItem('toppers-theme') || 'light'
@@ -26,6 +28,42 @@ export default function App() {
   useEffect(() => {
     const timer = window.setTimeout(() => setShowLoadingScreen(false), 850)
     return () => window.clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    const dataBaseUrl = (import.meta.env.VITE_DATA_BASE_URL || '/server').replace(/\/+$/, '')
+
+    async function loadCentreData() {
+      try {
+        const [studentsResponse, scheduleResponse] = await Promise.all([
+          fetch(`${dataBaseUrl}/students.json`, { signal: controller.signal }),
+          fetch(`${dataBaseUrl}/schedule.json`, { signal: controller.signal }),
+        ])
+
+        if (!studentsResponse.ok || !scheduleResponse.ok) {
+          throw new Error(`Data request failed (students: ${studentsResponse.status}, schedule: ${scheduleResponse.status}).`)
+        }
+
+        const [students, schedule] = await Promise.all([
+          studentsResponse.json(),
+          scheduleResponse.json(),
+        ])
+
+        if (!Array.isArray(students) || !Array.isArray(schedule)) {
+          throw new Error('The student and schedule data files must each contain a JSON array.')
+        }
+
+        setCentreData({ students, schedule })
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          setDataError(error.message || 'Unable to load centre data.')
+        }
+      }
+    }
+
+    loadCentreData()
+    return () => controller.abort()
   }, [])
 
   useEffect(() => {
@@ -42,7 +80,18 @@ export default function App() {
       <div className="app-shell">
         <Header theme={theme} onToggleTheme={() => setTheme((current) => current === 'dark' ? 'light' : 'dark')} />
         <main className="main-content" key={activePage}>
-          <Page selectedGrade={selectedGrade} onGradeChange={setSelectedGrade} />
+          {dataError ? (
+            <p role="alert">Could not load centre data: {dataError}</p>
+          ) : !centreData ? (
+            <p role="status">Loading centre data...</p>
+          ) : (
+            <Page
+              selectedGrade={selectedGrade}
+              onGradeChange={setSelectedGrade}
+              students={centreData.students}
+              schedule={centreData.schedule}
+            />
+          )}
         </main>
         <BottomNavigation activePage={activePage} onNavigate={setActivePage} />
         <AnimatePresence>

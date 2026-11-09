@@ -1,41 +1,17 @@
 import { useState } from 'react'
 import { FiChevronLeft, FiChevronRight, FiClock, FiSun } from 'react-icons/fi'
 
-const classesByWeekday = {
-  0: [],
-  1: [
-    { grade: 10, time: '04:00 PM', subject: 'Mathematics', topic: 'Quadratic equations', tone: 'math' },
-    { grade: 10, time: '06:00 PM', subject: 'Physics', topic: 'Electricity & circuits', tone: 'physics' },
-  ],
-  2: [
-    { grade: 9, time: '04:30 PM', subject: 'Chemistry', topic: 'Chemical reactions', tone: 'chemistry' },
-  ],
-  3: [
-    { grade: 11, time: '05:00 PM', subject: 'Physics', topic: 'Motion and force', tone: 'physics' },
-  ],
-  4: [
-    { grade: 10, time: '04:00 PM', subject: 'Mathematics', topic: 'Coordinate geometry', tone: 'math' },
-    { grade: 12, time: '06:00 PM', subject: 'Biology', topic: 'Cell structure', tone: 'biology' },
-  ],
-  5: [
-    { grade: 12, time: '04:30 PM', subject: 'Biology', topic: 'Human physiology', tone: 'biology' },
-  ],
-  6: [
-    { grade: 10, time: '10:00 AM', subject: 'Revision workshop', topic: 'Weekly problem solving', tone: 'workshop' },
-  ],
-}
-
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-const allSessions = Object.values(classesByWeekday).flat()
-const gradeOptions = [...new Set(allSessions.map(({ grade }) => grade))].sort((a, b) => a - b)
+const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-function getSessions(date, selectedGrade) {
-  return (classesByWeekday[date.getDay()] ?? []).filter((session) => (
-    selectedGrade === 'all' || session.grade === Number(selectedGrade)
+function getSessions(date, selectedGrade, schedule) {
+  return schedule.filter((session) => (
+    session.date === weekdayNames[date.getDay()]
+    && (selectedGrade === 'all' || session.grade === Number(selectedGrade))
   ))
 }
 
-export default function SchedulePage() {
+export default function SchedulePage({ schedule }) {
   const [selectedGrade, setSelectedGrade] = useState('all')
   const [showActiveDays, setShowActiveDays] = useState(false)
   const [selectedDate, setSelectedDate] = useState(() => new Date())
@@ -49,11 +25,12 @@ export default function SchedulePage() {
   const selectedLabel = selectedDate.toLocaleDateString('en-US', {
     weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
   })
-  const classList = getSessions(selectedDate, selectedGrade)
+  const gradeOptions = [...new Set(schedule.map(({ grade }) => grade))].sort((a, b) => a - b)
+  const classList = getSessions(selectedDate, selectedGrade, schedule)
   const daysInMonth = new Date(year, month + 1, 0).getDate()
   const startingWeekday = new Date(year, month, 1).getDay()
   const calendarDays = Array.from({ length: daysInMonth }, (_, index) => new Date(year, month, index + 1))
-  const activeDayCount = calendarDays.filter((date) => getSessions(date, selectedGrade).length > 0).length
+  const activeDayCount = calendarDays.filter((date) => getSessions(date, selectedGrade, schedule).length > 0).length
 
   function changeMonth(offset) {
     const nextMonth = new Date(year, month + offset, 1)
@@ -98,7 +75,7 @@ export default function SchedulePage() {
           ))}
           {calendarDays.map((date) => {
             const isSelected = date.toDateString() === selectedDate.toDateString()
-            const hasClasses = getSessions(date, selectedGrade).length > 0
+            const hasClasses = getSessions(date, selectedGrade, schedule).length > 0
             return (
               <button
                 className={`calendar-date${isSelected ? ' date-selected' : ''}${hasClasses ? ' date-has-classes' : ''}`}
@@ -122,13 +99,13 @@ export default function SchedulePage() {
         {classList.length > 0 ? (
           <div className="class-list">
             {classList.map((session) => (
-              <article className="class-card" key={`${session.time}-${session.subject}`}>
+              <article className="class-card" key={`${session.time}-${session.class}`}>
                 <div className={`class-accent ${session.tone}`} />
                 <div className="class-card-body">
                   <div className="class-session-heading">
                     <div className="class-time"><FiClock aria-hidden="true" /><span>{session.time}</span></div>
                     <div className="class-details">
-                      <h3>{session.subject}</h3>
+                      <h3>{session.class}</h3>
                       <p className="class-topic">{session.topic}</p>
                     </div>
                   </div>
