@@ -3,6 +3,14 @@ import { FiChevronLeft, FiChevronRight, FiClock, FiSun } from 'react-icons/fi'
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
+function normalizeScheduleDate(value) {
+  if (typeof value !== 'string') return ''
+  const match = /^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec(value)
+  if (!match) return ''
+  const [, day, month, year] = match
+  return `${day.padStart(2, '0')}-${month.padStart(2, '0')}-${year}`
+}
+
 function getSessions(date, selectedGrade, schedule) {
   const exactDate = [
     String(date.getDate()).padStart(2, '0'),
@@ -11,7 +19,7 @@ function getSessions(date, selectedGrade, schedule) {
   ].join('-')
 
   return schedule.filter((session) => (
-    session.date === exactDate
+    normalizeScheduleDate(session.date) === exactDate
     && (selectedGrade === 'all' || session.grade === Number(selectedGrade))
   ))
 }
