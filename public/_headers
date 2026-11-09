@@ -1,5 +1,5 @@
-/students.json
+/server/students.json
   Access-Control-Allow-Origin: *
 
-/schedule.json
+/server/schedule.json
   Access-Control-Allow-Origin: *
