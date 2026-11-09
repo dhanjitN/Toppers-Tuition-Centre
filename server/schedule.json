@@ -1,66 +1,49 @@
 [
   {
-    "date": "Monday",
-    "time": "04:00 PM",
+    "date": "7-11-2026",
+    "time": "03:00 PM",
     "grade": 10,
     "class": "Mathematics",
-    "topic": "Quadratic equations",
+    "topic": "Triangles Intro",
     "tone": "math"
   },
   {
-    "date": "Monday",
-    "time": "06:00 PM",
-    "grade": 10,
-    "class": "Physics",
-    "topic": "Electricity & circuits",
-    "tone": "physics"
+    "date": "7-11-2026",
+    "time": "08:00 AM",
+    "grade": 7,
+    "class": "Science",
+    "topic": "Reproduction in plants",
+    "tone": "science"
   },
   {
-    "date": "Tuesday",
-    "time": "04:30 PM",
-    "grade": 9,
-    "class": "Chemistry",
-    "topic": "Chemical reactions",
-    "tone": "chemistry"
-  },
-  {
-    "date": "Wednesday",
-    "time": "05:00 PM",
-    "grade": 11,
-    "class": "Physics",
-    "topic": "Motion and force",
-    "tone": "physics"
-  },
-  {
-    "date": "Thursday",
-    "time": "04:00 PM",
-    "grade": 10,
+    "date": "7-11-2026",
+    "time": "12:00 PM",
+    "grade": 8,
     "class": "Mathematics",
-    "topic": "Coordinate geometry",
+    "topic": "Algebraic expressions",
     "tone": "math"
   },
   {
-    "date": "Thursday",
-    "time": "06:00 PM",
-    "grade": 12,
-    "class": "Biology",
-    "topic": "Cell structure",
-    "tone": "biology"
-  },
-  {
-    "date": "Friday",
-    "time": "04:30 PM",
-    "grade": 12,
-    "class": "Biology",
-    "topic": "Human physiology",
-    "tone": "biology"
-  },
-  {
-    "date": "Saturday",
-    "time": "10:00 AM",
+    "date": "9-11-2026",
+    "time": "7:00 PM",
     "grade": 10,
-    "class": "Revision workshop",
-    "topic": "Weekly problem solving",
-    "tone": "workshop"
+    "class": "Mathematics",
+    "topic": "Triangles - 6.2",
+    "tone": "math"
+  },
+  {
+    "date": "9-11-2026",
+    "time": "9:00 PM",
+    "grade": 8,
+    "class": "Mathematics",
+    "topic": "Algebraic expressions",
+    "tone": "math"
+  },{
+    "date": "9-11-2026",
+    "time": "9:00 PM",
+    "grade": 7,
+    "class": "Science",
+    "topic": "Reproduction in plants - Microorganisms ; vegetative propagation",
+    "tone": "science"
   }
 ]

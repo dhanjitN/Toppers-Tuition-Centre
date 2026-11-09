@@ -2,11 +2,16 @@ import { useState } from 'react'
 import { FiChevronLeft, FiChevronRight, FiClock, FiSun } from 'react-icons/fi'
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 function getSessions(date, selectedGrade, schedule) {
+  const exactDate = [
+    String(date.getDate()).padStart(2, '0'),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    date.getFullYear(),
+  ].join('-')
+
   return schedule.filter((session) => (
-    session.date === weekdayNames[date.getDay()]
+    session.date === exactDate
     && (selectedGrade === 'all' || session.grade === Number(selectedGrade))
   ))
 }
