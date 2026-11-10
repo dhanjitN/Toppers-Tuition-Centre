@@ -32,7 +32,7 @@ export default function App() {
 
   useEffect(() => {
     const controller = new AbortController()
-    const dataBaseUrl = (import.meta.env.VITE_DATA_BASE_URL || '/server').replace(/\/+$/, '')
+    const dataBaseUrl = (import.meta.env.VITE_DATA_BASE_URL || 'https://dhanjitn.github.io/Tuition-Data').replace(/\/+$/, '')
 
     async function loadCentreData() {
       try {
