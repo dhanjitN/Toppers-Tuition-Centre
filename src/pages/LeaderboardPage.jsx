@@ -4,10 +4,17 @@ const grades = [10, 8, 9,  7, 6, 5, 3, 2]
 const rankArtwork = ['fire', 'water', 'forest', 'stone', 'sunrise']
 
 export default function LeaderboardPage({ selectedGrade, onGradeChange, students }) {
-  const rankedStudents = students
+  const sortedStudents = students
     .filter((student) => selectedGrade === 'all' || student.grade === Number(selectedGrade))
-    .sort((a, b) => b.points - a.points)
-    .slice(0, 5)
+    .sort((a, b) => b.points - a.points || a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
+
+  let rank = 0
+  const rankedStudents = sortedStudents
+    .map((student, index, sorted) => {
+      if (index === 0 || student.points !== sorted[index - 1].points) rank += 1
+      return { student, rank }
+    })
+    .filter(({ rank: studentRank }) => studentRank <= 5)
 
   return (
     <section className="leaderboard-page" aria-labelledby="leaderboard-title">
@@ -24,11 +31,11 @@ export default function LeaderboardPage({ selectedGrade, onGradeChange, students
       <div className="leaderboard-caption">
         <span className="points-heading">Points</span>
       </div>
-      <div className="leaderboard-list" aria-label="Top five students ranked by points">
+      <div className="leaderboard-list" aria-label="Students in the top five point ranks">
         <AnimatePresence mode="popLayout" initial={false}>
-          {rankedStudents.map((student, index) => (
+          {rankedStudents.map(({ student, rank }, index) => (
             <motion.article
-              className={`leader-card rank-${index + 1}${selectedGrade === 'all' ? ' all-grades' : ' filtered-leader-card'}`}
+              className={`leader-card rank-${rank}${selectedGrade === 'all' ? ' all-grades' : ' filtered-leader-card'}`}
               key={`${selectedGrade}-${student.name}`}
               layout
               initial={{ opacity: 0, y: 12 }}
@@ -37,9 +44,9 @@ export default function LeaderboardPage({ selectedGrade, onGradeChange, students
               transition={{ duration: 0.22, delay: index * 0.035 }}
             >
               {selectedGrade === 'all' && (
-                <span className={`leader-art leader-art-${rankArtwork[index]}`} aria-hidden="true" />
+                <span className={`leader-art leader-art-${rankArtwork[rank - 1]}`} aria-hidden="true" />
               )}
-              <span className="leader-rank">{String(index + 1).padStart(2, '0')}</span>
+              <span className="leader-rank">{String(rank).padStart(2, '0')}</span>
               <span className="leader-person">
                 <strong>{student.name}</strong>
                 <small>Grade {student.grade}</small>
