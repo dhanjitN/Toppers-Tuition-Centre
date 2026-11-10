@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
 
-const grades = [10, 8, 7, 6, 5, 3, 2]
+const grades = [10, 8, 9,  7, 6, 5, 3, 2]
 const rankArtwork = ['fire', 'water', 'forest', 'stone', 'sunrise']
 
 export default function LeaderboardPage({ selectedGrade, onGradeChange, students }) {

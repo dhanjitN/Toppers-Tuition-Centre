@@ -119,7 +119,10 @@ export default function SchedulePage({ schedule }) {
                 <div className={`class-accent ${session.tone}`} />
                 <div className="class-card-body">
                   <div className="class-session-heading">
-                    <div className="class-time"><FiClock aria-hidden="true" /><span>{session.time}</span></div>
+                    <div className="class-session-meta">
+                      <div className="class-time"><FiClock aria-hidden="true" /><span>{session.time}</span></div>
+                      <span className="class-grade">Grade {session.grade}</span>
+                    </div>
                     <div className="class-details">
                       <h3>{session.class}</h3>
                       <p className="class-topic">{session.topic}</p>
