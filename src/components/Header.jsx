@@ -1,10 +1,18 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { FiMoon, FiSun } from 'react-icons/fi'
 
-export default function Header({ theme, onToggleTheme }) {
+export default function Header({ theme, onHome, onToggleTheme }) {
   return (
     <header className="topbar">
-      <a className="brand" href="#home" aria-label="Toppers Tuition Centre home">
+      <a
+        className="brand"
+        href="#home"
+        aria-label="Toppers Tuition Centre home"
+        onClick={(event) => {
+          event.preventDefault()
+          onHome()
+        }}
+      >
         <img className="brand-logo" src="/logo.jpeg" alt="" />
         <span className="brand-copy">
           <strong>TOPPERS</strong>

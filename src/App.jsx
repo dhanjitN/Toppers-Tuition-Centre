@@ -3,10 +3,21 @@ import { AnimatePresence, motion, MotionConfig } from 'motion/react'
 import BottomNavigation from './components/BottomNavigation.jsx'
 import Header from './components/Header.jsx'
 import LeaderboardPage from './pages/LeaderboardPage.jsx'
+import DailyWorkPage from './pages/DailyWorkPage.jsx'
 import SchedulePage from './pages/SchedulePage.jsx'
+
+function HomeworkPage({ homework }) {
+  return <DailyWorkPage title="Homework" items={homework} contentKey="homework" />
+}
+
+function StudyPlanPage({ plan }) {
+  return <DailyWorkPage title="Study Plan" items={plan} contentKey="Tasks" />
+}
 
 const pages = {
   leaderboard: LeaderboardPage,
+  homework: HomeworkPage,
+  plan: StudyPlanPage,
   schedule: SchedulePage,
 }
 
@@ -36,25 +47,36 @@ export default function App() {
 
     async function loadCentreData() {
       try {
-        const [studentsResponse, scheduleResponse] = await Promise.all([
+        const [studentsResponse, scheduleResponse, homeworkResponse, planResponse] = await Promise.all([
           fetch(`${dataBaseUrl}/students.json`, { signal: controller.signal }),
           fetch(`${dataBaseUrl}/schedule.json`, { signal: controller.signal }),
+          fetch(`${dataBaseUrl}/homework.json`, { signal: controller.signal }),
+          fetch(`${dataBaseUrl}/plan.json`, { signal: controller.signal }),
         ])
 
-        if (!studentsResponse.ok || !scheduleResponse.ok) {
-          throw new Error(`Data request failed (students: ${studentsResponse.status}, schedule: ${scheduleResponse.status}).`)
+        const responses = {
+          students: studentsResponse,
+          schedule: scheduleResponse,
+          homework: homeworkResponse,
+          plan: planResponse,
         }
+        const failedRequests = Object.entries(responses)
+          .filter(([, response]) => !response.ok)
+          .map(([name, response]) => `${name}: ${response.status}`)
+        if (failedRequests.length > 0) throw new Error(`Data request failed (${failedRequests.join(', ')}).`)
 
-        const [students, schedule] = await Promise.all([
+        const [students, schedule, homework, plan] = await Promise.all([
           studentsResponse.json(),
           scheduleResponse.json(),
+          homeworkResponse.json(),
+          planResponse.json(),
         ])
 
-        if (!Array.isArray(students) || !Array.isArray(schedule)) {
-          throw new Error('The student and schedule data files must each contain a JSON array.')
+        if (![students, schedule, homework, plan].every(Array.isArray)) {
+          throw new Error('The student, schedule, homework, and plan data files must each contain a JSON array.')
         }
 
-        setCentreData({ students, schedule })
+        setCentreData({ students, schedule, homework, plan })
       } catch (error) {
         if (error.name !== 'AbortError') {
           setDataError(error.message || 'Unable to load centre data.')
@@ -78,7 +100,11 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="app-shell">
-        <Header theme={theme} onToggleTheme={() => setTheme((current) => current === 'dark' ? 'light' : 'dark')} />
+        <Header
+          theme={theme}
+          onHome={() => setActivePage('leaderboard')}
+          onToggleTheme={() => setTheme((current) => current === 'dark' ? 'light' : 'dark')}
+        />
         <main className="main-content" key={activePage}>
           {dataError ? (
             <p role="alert">Could not load centre data: {dataError}</p>
@@ -90,6 +116,8 @@ export default function App() {
               onGradeChange={setSelectedGrade}
               students={centreData.students}
               schedule={centreData.schedule}
+              homework={centreData.homework}
+              plan={centreData.plan}
             />
           )}
         </main>
