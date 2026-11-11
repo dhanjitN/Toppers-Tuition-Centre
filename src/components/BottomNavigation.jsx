@@ -1,8 +1,7 @@
-import { FiBookOpen, FiCalendar, FiClipboard, FiAward } from 'react-icons/fi'
+import { FiCalendar, FiClipboard, FiAward } from 'react-icons/fi'
 
 const items = [
   { id: 'leaderboard', label: 'Leaderboard', icon: FiAward },
-  { id: 'homework', label: 'Homework', icon: FiBookOpen },
   { id: 'plan', label: 'Study Plan', icon: FiClipboard },
   { id: 'schedule', label: 'Schedule', icon: FiCalendar },
 ]

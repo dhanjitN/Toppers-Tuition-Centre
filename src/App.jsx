@@ -6,17 +6,12 @@ import LeaderboardPage from './pages/LeaderboardPage.jsx'
 import DailyWorkPage from './pages/DailyWorkPage.jsx'
 import SchedulePage from './pages/SchedulePage.jsx'
 
-function HomeworkPage({ homework }) {
-  return <DailyWorkPage title="Homework" items={homework} contentKey="homework" />
-}
-
 function StudyPlanPage({ plan }) {
   return <DailyWorkPage title="Study Plan" items={plan} contentKey="Tasks" />
 }
 
 const pages = {
   leaderboard: LeaderboardPage,
-  homework: HomeworkPage,
   plan: StudyPlanPage,
   schedule: SchedulePage,
 }
@@ -47,17 +42,15 @@ export default function App() {
 
     async function loadCentreData() {
       try {
-        const [studentsResponse, scheduleResponse, homeworkResponse, planResponse] = await Promise.all([
+        const [studentsResponse, scheduleResponse, planResponse] = await Promise.all([
           fetch(`${dataBaseUrl}/students.json`, { signal: controller.signal }),
           fetch(`${dataBaseUrl}/schedule.json`, { signal: controller.signal }),
-          fetch(`${dataBaseUrl}/homework.json`, { signal: controller.signal }),
           fetch(`${dataBaseUrl}/plan.json`, { signal: controller.signal }),
         ])
 
         const responses = {
           students: studentsResponse,
           schedule: scheduleResponse,
-          homework: homeworkResponse,
           plan: planResponse,
         }
         const failedRequests = Object.entries(responses)
@@ -65,18 +58,17 @@ export default function App() {
           .map(([name, response]) => `${name}: ${response.status}`)
         if (failedRequests.length > 0) throw new Error(`Data request failed (${failedRequests.join(', ')}).`)
 
-        const [students, schedule, homework, plan] = await Promise.all([
+        const [students, schedule, plan] = await Promise.all([
           studentsResponse.json(),
           scheduleResponse.json(),
-          homeworkResponse.json(),
           planResponse.json(),
         ])
 
-        if (![students, schedule, homework, plan].every(Array.isArray)) {
-          throw new Error('The student, schedule, homework, and plan data files must each contain a JSON array.')
+        if (![students, schedule, plan].every(Array.isArray)) {
+          throw new Error('The student, schedule, and plan data files must each contain a JSON array.')
         }
 
-        setCentreData({ students, schedule, homework, plan })
+        setCentreData({ students, schedule, plan })
       } catch (error) {
         if (error.name !== 'AbortError') {
           setDataError(error.message || 'Unable to load centre data.')
@@ -116,7 +108,6 @@ export default function App() {
               onGradeChange={setSelectedGrade}
               students={centreData.students}
               schedule={centreData.schedule}
-              homework={centreData.homework}
               plan={centreData.plan}
             />
           )}

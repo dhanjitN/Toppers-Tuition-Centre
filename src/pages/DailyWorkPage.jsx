@@ -10,10 +10,26 @@ function formatWorkDate(value) {
     .toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
 }
 
+function normalizeWorkDate(value) {
+  if (typeof value !== 'string') return ''
+  const match = /^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec(value)
+  if (!match) return ''
+
+  const [, day, month, year] = match
+  return `${day.padStart(2, '0')}-${month.padStart(2, '0')}-${year}`
+}
+
 export default function DailyWorkPage({ title, items, contentKey }) {
   const [selectedGrade, setSelectedGrade] = useState('all')
-  const gradeOptions = [...new Set(items.map(({ grade }) => grade))].sort((a, b) => a - b)
-  const visibleItems = items.filter((item) => selectedGrade === 'all' || item.grade === Number(selectedGrade))
+  const today = new Date()
+  const todayKey = [
+    String(today.getDate()).padStart(2, '0'),
+    String(today.getMonth() + 1).padStart(2, '0'),
+    today.getFullYear(),
+  ].join('-')
+  const todayItems = items.filter((item) => normalizeWorkDate(item.date) === todayKey)
+  const gradeOptions = [...new Set(todayItems.map(({ grade }) => grade))].sort((a, b) => a - b)
+  const visibleItems = todayItems.filter((item) => selectedGrade === 'all' || item.grade === Number(selectedGrade))
 
   return (
     <section className="daily-work-page" aria-labelledby="daily-work-title">
@@ -50,7 +66,7 @@ export default function DailyWorkPage({ title, items, contentKey }) {
           ))}
         </div>
       ) : (
-        <p className="schedule-empty">No {title.toLowerCase()} available for this grade.</p>
+        <p className="schedule-empty">No {title.toLowerCase()} events scheduled for today.</p>
       )}
     </section>
   )
