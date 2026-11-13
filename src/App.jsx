@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, MotionConfig } from 'motion/react'
+import { FiDownload, FiX } from 'react-icons/fi'
 import BottomNavigation from './components/BottomNavigation.jsx'
 import Header from './components/Header.jsx'
 import LeaderboardPage from './pages/LeaderboardPage.jsx'
@@ -20,6 +21,8 @@ export default function App() {
   const [showLoadingScreen, setShowLoadingScreen] = useState(true)
   const [centreData, setCentreData] = useState(null)
   const [dataError, setDataError] = useState('')
+  const [installPromptEvent, setInstallPromptEvent] = useState(null)
+  const [installError, setInstallError] = useState('')
   const [theme, setTheme] = useState(() => {
     try {
       return localStorage.getItem('toppers-theme') || 'light'
@@ -35,10 +38,14 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    const controller = new AbortController()
     const dataBaseUrl = (import.meta.env.VITE_DATA_BASE_URL || 'https://dhanjitn.github.io/Tuition-Data').replace(/\/+$/, '')
+    let activeController
+    let hasLoadedData = false
 
     async function loadCentreData() {
+      activeController?.abort()
+      const controller = new AbortController()
+      activeController = controller
       try {
         const [studentsResponse, scheduleResponse, attendanceResponse] = await Promise.all([
           fetch(`${dataBaseUrl}/students.json`, { signal: controller.signal }),
@@ -67,16 +74,55 @@ export default function App() {
         }
 
         setCentreData({ students, schedule, attendance })
+        setDataError('')
+        hasLoadedData = true
       } catch (error) {
-        if (error.name !== 'AbortError') {
+        if (error.name !== 'AbortError' && !hasLoadedData) {
           setDataError(error.message || 'Unable to load centre data.')
         }
       }
     }
 
     loadCentreData()
-    return () => controller.abort()
+
+    window.addEventListener('online', loadCentreData)
+    return () => {
+      window.removeEventListener('online', loadCentreData)
+      activeController?.abort()
+    }
   }, [])
+
+  useEffect(() => {
+    function handleInstallAvailable(event) {
+      event.preventDefault()
+      setInstallPromptEvent(event)
+    }
+
+    function handleInstalled() {
+      setInstallPromptEvent(null)
+      setInstallError('')
+    }
+
+    window.addEventListener('beforeinstallprompt', handleInstallAvailable)
+    window.addEventListener('appinstalled', handleInstalled)
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleInstallAvailable)
+      window.removeEventListener('appinstalled', handleInstalled)
+    }
+  }, [])
+
+  async function installApp() {
+    if (!installPromptEvent) return
+
+    try {
+      await installPromptEvent.prompt()
+      await installPromptEvent.userChoice
+      setInstallPromptEvent(null)
+    } catch {
+      setInstallError('Could not open the install prompt. Try installing from your browser menu.')
+      setInstallPromptEvent(null)
+    }
+  }
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -129,6 +175,27 @@ export default function App() {
             setActivePage(page)
           }}
         />
+        {installPromptEvent && (
+          <aside className="install-prompt" aria-label="Install Toppers Tuition Centre">
+            <div className="install-prompt-copy">
+              <strong>Install Toppers</strong>
+              <span>Add it to your home screen and use it offline.</span>
+            </div>
+            <button className="install-action" type="button" onClick={installApp}>
+              <FiDownload aria-hidden="true" />
+              Install
+            </button>
+            <button
+              className="install-dismiss"
+              type="button"
+              aria-label="Dismiss install prompt"
+              onClick={() => setInstallPromptEvent(null)}
+            >
+              <FiX aria-hidden="true" />
+            </button>
+          </aside>
+        )}
+        {installError && <p className="install-error" role="status">{installError}</p>}
         <AnimatePresence>
           {showLoadingScreen && (
             <motion.div

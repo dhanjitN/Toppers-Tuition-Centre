@@ -206,6 +206,13 @@ h1 { margin-bottom: 8px; font-size: 32px; line-height: 1.15; letter-spacing: 0; 
 .student-class-heading { margin: 0 0 8px; font-size: 13px; }
 .student-not-found { display: grid; justify-items: start; gap: 8px; }
 .student-not-found p { margin: 0; }
+.install-prompt { position: fixed; z-index: 6; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom)); left: 16px; width: min(calc(100% - 32px), 440px); display: flex; align-items: center; gap: 12px; margin: 0 auto; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 8px 28px rgba(24, 55, 43, .2); }
+.install-prompt-copy { min-width: 0; display: grid; gap: 3px; flex: 1; }
+.install-prompt-copy strong { color: var(--ink); font-size: 13px; }
+.install-prompt-copy span { color: var(--muted); font-size: 10px; }
+.install-action { display: inline-flex; align-items: center; gap: 6px; padding: 9px 11px; border: 0; border-radius: 8px; background: var(--green); color: #fff; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.install-dismiss { width: 30px; height: 30px; display: grid; flex: 0 0 30px; place-items: center; border: 0; border-radius: 50%; background: var(--surface-soft); color: var(--muted); cursor: pointer; }
+.install-error { position: fixed; z-index: 7; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom)); left: 16px; width: min(calc(100% - 32px), 440px); margin: 0 auto; padding: 12px; border-radius: 8px; background: #fff2ed; color: #823c25; font-size: 12px; box-shadow: 0 8px 28px rgba(24, 55, 43, .16); }
 
 @media (min-width: 520px) {
   .student-profile { padding: 20px; }
@@ -226,6 +233,7 @@ h1 { margin-bottom: 8px; font-size: 32px; line-height: 1.15; letter-spacing: 0; 
   .leader-card.rank-1 .leader-person strong { font-size: 18px; }
   .leader-points strong { font-size: 16px; }
   .bottom-navigation { position: sticky; bottom: 12px; width: 410px; min-height: 68px; margin: 25px auto 0; padding: 7px 15px; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 8px 26px rgba(34, 52, 42, .08); }
+  .install-prompt, .install-error { bottom: 20px; }
 }
 
 @media (max-width: 370px) {

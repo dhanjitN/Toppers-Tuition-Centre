@@ -8,6 +8,22 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['logo.jpeg', 'rank-fire.svg', 'rank-forest.svg', 'rank-stone.svg', 'rank-sunrise.svg', 'rank-water.svg'],
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => /\/(?:students|schedule|attendance)\.json$/.test(url.pathname),
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'centre-data',
+              networkTimeoutSeconds: 3,
+              expiration: {
+                maxEntries: 3,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+            },
+          },
+        ],
+      },
       manifest: {
         name: 'Toppers Tuition Centre',
         short_name: 'Toppers',

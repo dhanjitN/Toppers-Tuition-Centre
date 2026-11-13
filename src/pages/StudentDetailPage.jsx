@@ -42,6 +42,14 @@ export default function StudentDetailPage({ studentId, students, attendance, sch
     }]
   }).filter((entry) => entry.date)
   const attendedDates = new Set(attendanceEntries.map(({ date }) => date))
+  const monthlyAttendanceCount = new Set(
+    attendanceEntries
+      .filter(({ date }) => {
+        const [, entryMonth, entryYear] = date.split('-').map(Number)
+        return entryMonth === visibleMonth.getMonth() + 1 && entryYear === visibleMonth.getFullYear()
+      })
+      .map(({ date }) => date),
+  ).size
   const selectedEntry = attendanceEntries.find(({ date }) => date === getDateKey(selectedDate))
   const selectedSessions = selectedEntry
     ? schedule.filter((session) => (
@@ -91,8 +99,7 @@ export default function StudentDetailPage({ studentId, students, attendance, sch
             <h1 id="student-name">{student.name}</h1>
           </div>
           <div className="student-attendance-total">
-            <strong>{attendedDates.size}</strong>
-            <span>days attended</span>
+            <strong>{visibleMonth.toLocaleDateString('en-US', { month: 'short' })} - {monthlyAttendanceCount}</strong>
           </div>
         </div>
       </section>
