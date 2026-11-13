@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FiArrowLeft, FiChevronLeft, FiChevronRight, FiClock } from 'react-icons/fi'
+import { rankStudents } from '../utils/rankStudents.js'
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -27,7 +28,8 @@ export default function StudentDetailPage({ studentId, students, attendance, sch
   })
   const student = students.find((item) => item.student_id === studentId)
   const classRank = student
-    ? students.filter((item) => item.grade === student.grade && item.points > student.points).length + 1
+    ? rankStudents(students.filter((item) => item.grade === student.grade))
+      .find(({ student: rankedStudent }) => rankedStudent.student_id === studentId)?.rank
     : null
   const classRankStyle = classRank === 1 ? 'first' : classRank === 2 ? 'second' : classRank === 3 ? 'third' : 'other'
   const attendanceEntries = attendance.flatMap((record) => {

@@ -1,19 +1,13 @@
 import { AnimatePresence, motion } from 'motion/react'
+import { rankStudents } from '../utils/rankStudents.js'
 
 const grades = [10, 8, 9,  7, 6, 5, 3, 2]
 const rankArtwork = ['fire', 'water', 'forest', 'stone', 'sunrise']
 
 export default function LeaderboardPage({ selectedGrade, onGradeChange, onStudentSelect, students }) {
-  const sortedStudents = students
-    .filter((student) => selectedGrade === 'all' || student.grade === Number(selectedGrade))
-    .sort((a, b) => b.points - a.points || a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
-
-  let rank = 0
-  const rankedStudents = sortedStudents
-    .map((student, index, sorted) => {
-      if (index === 0 || student.points !== sorted[index - 1].points) rank += 1
-      return { student, rank }
-    })
+  const rankedStudents = rankStudents(
+    students.filter((student) => selectedGrade === 'all' || student.grade === Number(selectedGrade)),
+  )
     .filter(({ rank: studentRank }) => studentRank <= 5)
 
   return (
