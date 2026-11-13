@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['logo.jpeg', 'rank-fire.svg', 'rank-forest.svg', 'rank-stone.svg', 'rank-sunrise.svg', 'rank-water.svg'],
+      includeAssets: ['logo.jpeg', 'pwa-192.png', 'pwa-512.png', 'rank-fire.svg', 'rank-forest.svg', 'rank-stone.svg', 'rank-sunrise.svg', 'rank-water.svg'],
       workbox: {
         runtimeCaching: [
           {
@@ -32,22 +32,17 @@ export default defineConfig({
         background_color: '#f6f7f2',
         display: 'standalone',
         start_url: '/',
+        scope: '/',
         icons: [
           {
-            src: 'logo.jpeg',
+            src: 'pwa-192.png',
             sizes: '192x192',
-            type: 'image/jpeg'
+            type: 'image/png'
           },
           {
-            src: 'logo.jpeg',
+            src: 'pwa-512.png',
             sizes: '512x512',
-            type: 'image/jpeg'
-          },
-          {
-            src: 'logo.jpeg',
-            sizes: '512x512',
-            type: 'image/jpeg',
-            purpose: 'any maskable'
+            type: 'image/png'
           }
         ]
       }

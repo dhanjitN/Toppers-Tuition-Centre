@@ -22,7 +22,11 @@ export default function App() {
   const [centreData, setCentreData] = useState(null)
   const [dataError, setDataError] = useState('')
   const [installPromptEvent, setInstallPromptEvent] = useState(null)
-  const [installError, setInstallError] = useState('')
+  const [installMessage, setInstallMessage] = useState('')
+  const [installPromptDismissed, setInstallPromptDismissed] = useState(false)
+  const [isStandalone, setIsStandalone] = useState(() => (
+    window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true
+  ))
   const [theme, setTheme] = useState(() => {
     try {
       return localStorage.getItem('toppers-theme') || 'light'
@@ -93,19 +97,38 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    const standaloneQuery = window.matchMedia('(display-mode: standalone)')
+    const updateStandalone = () => {
+      setIsStandalone(standaloneQuery.matches || window.navigator.standalone === true)
+    }
+
     function handleInstallAvailable(event) {
       event.preventDefault()
       setInstallPromptEvent(event)
+      setInstallPromptDismissed(false)
+      setInstallMessage('')
     }
 
     function handleInstalled() {
+      setIsStandalone(true)
       setInstallPromptEvent(null)
-      setInstallError('')
+      setInstallPromptDismissed(true)
+      setInstallMessage('')
     }
 
+    if (standaloneQuery.addEventListener) {
+      standaloneQuery.addEventListener('change', updateStandalone)
+    } else {
+      standaloneQuery.addListener(updateStandalone)
+    }
     window.addEventListener('beforeinstallprompt', handleInstallAvailable)
     window.addEventListener('appinstalled', handleInstalled)
     return () => {
+      if (standaloneQuery.removeEventListener) {
+        standaloneQuery.removeEventListener('change', updateStandalone)
+      } else {
+        standaloneQuery.removeListener(updateStandalone)
+      }
       window.removeEventListener('beforeinstallprompt', handleInstallAvailable)
       window.removeEventListener('appinstalled', handleInstalled)
     }
@@ -118,10 +141,20 @@ export default function App() {
       await installPromptEvent.prompt()
       await installPromptEvent.userChoice
       setInstallPromptEvent(null)
+      setInstallMessage('')
     } catch {
-      setInstallError('Could not open the install prompt. Try installing from your browser menu.')
+      setInstallMessage('Could not open the browser install dialog. Refresh the page and try again.')
       setInstallPromptEvent(null)
     }
+  }
+
+  function handleInstallClick() {
+    if (installPromptEvent) {
+      installApp()
+      return
+    }
+
+    setInstallMessage('The browser install dialog is not available for this page yet.')
   }
 
   useEffect(() => {
@@ -142,6 +175,8 @@ export default function App() {
             setSelectedStudentId(null)
             setActivePage('leaderboard')
           }}
+          onInstall={handleInstallClick}
+          showInstall={!isStandalone}
           onToggleTheme={() => setTheme((current) => current === 'dark' ? 'light' : 'dark')}
         />
         <main className="main-content" key={selectedStudentId || activePage}>
@@ -175,7 +210,7 @@ export default function App() {
             setActivePage(page)
           }}
         />
-        {installPromptEvent && (
+        {installPromptEvent && !installPromptDismissed && !isStandalone && (
           <aside className="install-prompt" aria-label="Install Toppers Tuition Centre">
             <div className="install-prompt-copy">
               <strong>Install Toppers</strong>
@@ -189,13 +224,13 @@ export default function App() {
               className="install-dismiss"
               type="button"
               aria-label="Dismiss install prompt"
-              onClick={() => setInstallPromptEvent(null)}
+              onClick={() => setInstallPromptDismissed(true)}
             >
               <FiX aria-hidden="true" />
             </button>
           </aside>
         )}
-        {installError && <p className="install-error" role="status">{installError}</p>}
+        {installMessage && <p className="install-message" role="status">{installMessage}</p>}
         <AnimatePresence>
           {showLoadingScreen && (
             <motion.div
