@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 const grades = [10, 8, 9,  7, 6, 5, 3, 2]
 const rankArtwork = ['fire', 'water', 'forest', 'stone', 'sunrise']
 
-export default function LeaderboardPage({ selectedGrade, onGradeChange, students }) {
+export default function LeaderboardPage({ selectedGrade, onGradeChange, onStudentSelect, students }) {
   const sortedStudents = students
     .filter((student) => selectedGrade === 'all' || student.grade === Number(selectedGrade))
     .sort((a, b) => b.points - a.points || a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
@@ -34,9 +34,12 @@ export default function LeaderboardPage({ selectedGrade, onGradeChange, students
       <div className="leaderboard-list" aria-label="Students in the top five point ranks">
         <AnimatePresence mode="popLayout" initial={false}>
           {rankedStudents.map(({ student, rank }, index) => (
-            <motion.article
+            <motion.button
               className={`leader-card rank-${rank}${selectedGrade === 'all' ? ' all-grades' : ' filtered-leader-card'}`}
               key={`${selectedGrade}-${student.name}`}
+              type="button"
+              aria-label={`View ${student.name}, Grade ${student.grade}, ${student.points} points`}
+              onClick={() => onStudentSelect(student.student_id)}
               layout
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -52,7 +55,7 @@ export default function LeaderboardPage({ selectedGrade, onGradeChange, students
                 <small>Grade {student.grade}</small>
               </span>
               <span className="leader-points">{student.points.toLocaleString()}</span>
-            </motion.article>
+            </motion.button>
           ))}
         </AnimatePresence>
       </div>

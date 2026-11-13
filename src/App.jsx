@@ -3,15 +3,19 @@ import { AnimatePresence, motion, MotionConfig } from 'motion/react'
 import BottomNavigation from './components/BottomNavigation.jsx'
 import Header from './components/Header.jsx'
 import LeaderboardPage from './pages/LeaderboardPage.jsx'
+import AttendancePage from './pages/AttendancePage.jsx'
 import SchedulePage from './pages/SchedulePage.jsx'
+import StudentDetailPage from './pages/StudentDetailPage.jsx'
 
 const pages = {
   leaderboard: LeaderboardPage,
+  attendance: AttendancePage,
   schedule: SchedulePage,
 }
 
 export default function App() {
   const [activePage, setActivePage] = useState('leaderboard')
+  const [selectedStudentId, setSelectedStudentId] = useState(null)
   const [selectedGrade, setSelectedGrade] = useState('all')
   const [showLoadingScreen, setShowLoadingScreen] = useState(true)
   const [centreData, setCentreData] = useState(null)
@@ -36,30 +40,33 @@ export default function App() {
 
     async function loadCentreData() {
       try {
-        const [studentsResponse, scheduleResponse] = await Promise.all([
+        const [studentsResponse, scheduleResponse, attendanceResponse] = await Promise.all([
           fetch(`${dataBaseUrl}/students.json`, { signal: controller.signal }),
           fetch(`${dataBaseUrl}/schedule.json`, { signal: controller.signal }),
+          fetch(`${dataBaseUrl}/attendance.json`, { signal: controller.signal }),
         ])
 
         const responses = {
           students: studentsResponse,
           schedule: scheduleResponse,
+          attendance: attendanceResponse,
         }
         const failedRequests = Object.entries(responses)
           .filter(([, response]) => !response.ok)
           .map(([name, response]) => `${name}: ${response.status}`)
         if (failedRequests.length > 0) throw new Error(`Data request failed (${failedRequests.join(', ')}).`)
 
-        const [students, schedule] = await Promise.all([
+        const [students, schedule, attendance] = await Promise.all([
           studentsResponse.json(),
           scheduleResponse.json(),
+          attendanceResponse.json(),
         ])
 
-        if (![students, schedule].every(Array.isArray)) {
-          throw new Error('The student and schedule data files must each contain a JSON array.')
+        if (![students, schedule, attendance].every(Array.isArray)) {
+          throw new Error('The student, schedule, and attendance data files must each contain a JSON array.')
         }
 
-        setCentreData({ students, schedule })
+        setCentreData({ students, schedule, attendance })
       } catch (error) {
         if (error.name !== 'AbortError') {
           setDataError(error.message || 'Unable to load centre data.')
@@ -85,24 +92,43 @@ export default function App() {
       <div className="app-shell">
         <Header
           theme={theme}
-          onHome={() => setActivePage('leaderboard')}
+          onHome={() => {
+            setSelectedStudentId(null)
+            setActivePage('leaderboard')
+          }}
           onToggleTheme={() => setTheme((current) => current === 'dark' ? 'light' : 'dark')}
         />
-        <main className="main-content" key={activePage}>
+        <main className="main-content" key={selectedStudentId || activePage}>
           {dataError ? (
             <p role="alert">Could not load centre data: {dataError}</p>
           ) : !centreData ? (
             <p role="status">Loading centre data...</p>
+          ) : selectedStudentId ? (
+            <StudentDetailPage
+              studentId={selectedStudentId}
+              students={centreData.students}
+              attendance={centreData.attendance}
+              schedule={centreData.schedule}
+              onBack={() => setSelectedStudentId(null)}
+            />
           ) : (
             <Page
               selectedGrade={selectedGrade}
               onGradeChange={setSelectedGrade}
+              onStudentSelect={setSelectedStudentId}
               students={centreData.students}
               schedule={centreData.schedule}
+              attendance={centreData.attendance}
             />
           )}
         </main>
-        <BottomNavigation activePage={activePage} onNavigate={setActivePage} />
+        <BottomNavigation
+          activePage={activePage}
+          onNavigate={(page) => {
+            setSelectedStudentId(null)
+            setActivePage(page)
+          }}
+        />
         <AnimatePresence>
           {showLoadingScreen && (
             <motion.div
