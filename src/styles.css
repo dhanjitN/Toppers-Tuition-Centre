@@ -121,7 +121,7 @@ h1 { margin-bottom: 8px; font-size: 32px; line-height: 1.15; letter-spacing: 0; 
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
 .section-heading .eyebrow { margin-bottom: 5px; font-size: 9px; }
 .section-heading h2 { margin: 0; font-size: 18px; line-height: 1.3; }
-.bottom-navigation { position: fixed; z-index: 5; right: 0; bottom: 0; left: 0; width: min(100%, 1120px); min-height: 72px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 auto; padding: 7px 12px max(7px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--surface); transition: background-color 200ms ease, border-color 200ms ease; }
+.bottom-navigation { position: fixed; z-index: 5; right: 0; bottom: 0; left: 0; width: min(100%, 1120px); min-height: 72px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 auto; padding: 7px 12px max(7px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--surface); transition: background-color 200ms ease, border-color 200ms ease; }
 .nav-item { display: grid; align-content: center; justify-items: center; gap: 4px; border: 0; background: transparent; color: #89918b; cursor: pointer; }
 .nav-item svg { font-size: 20px; stroke-width: 1.8; }
 .nav-item span { font-size: 9px; font-weight: 600; }

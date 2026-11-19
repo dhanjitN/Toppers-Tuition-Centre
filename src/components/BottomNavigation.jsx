@@ -3,7 +3,7 @@ import { FiCalendar, FiAward, FiCheckCircle } from 'react-icons/fi'
 const items = [
   { id: 'leaderboard', label: 'Leaderboard', icon: FiAward },
   { id: 'attendance', label: 'Attendance', icon: FiCheckCircle },
-  { id: 'schedule', label: 'Schedule', icon: FiCalendar },
+  // { id: 'schedule', label: 'Schedule', icon: FiCalendar },
 ]
 
 export default function BottomNavigation({ activePage, onNavigate }) {

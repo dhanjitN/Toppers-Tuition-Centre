@@ -148,6 +148,7 @@ export default function StudentDetailPage({ studentId, students, attendance, sch
               <span>Points earned</span>
               <strong>{selectedEntry.points}</strong>
             </article>
+            {/*
             <h3 className="student-class-heading">Class details</h3>
             {selectedSessions.length > 0 ? (
               <div className="class-list">
@@ -175,6 +176,7 @@ export default function StudentDetailPage({ studentId, students, attendance, sch
             ) : (
               <p className="schedule-empty">No class details available for this date.</p>
             )}
+            */}
           </>
         ) : (
           <p className="schedule-empty">No attendance recorded for this date.</p>
